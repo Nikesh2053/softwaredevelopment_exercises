@@ -46,7 +46,7 @@ The files take you on a journey, one idea at a time:
 |---|---|---|
 | **1. Plain scripts** | examples 00 to 08, exercises 1 to 4 | Code runs from top to bottom, one line after another. No functions yet. |
 | **2. Your first functions** | example 09, exercise 5 | You learn `def`, parameters and `return`, and rewrite earlier problems as functions. |
-| **3. Organised programs** | examples 10 to 19, exercises 6 to 10 | Each example groups its ideas into small functions and runs them from `main()`. |
+| **3. Organised programs** | examples 10 to 21, exercises 6 to 11 | Each example groups its ideas into small functions and runs them from `main()`. |
 
 Every example file starts with a **docstring** that gives an everyday **analogy** for the topic, explains it, shows how to run the file, and gives a short **Try it yourself** task. The output is split into numbered parts, such as `--- 3. Slicing ---`, so you can match each part of the output to the code that printed it.
 
@@ -87,6 +87,8 @@ Work down this table. Run the example, do its **Try it yourself** task, then do 
 | 18 | Introduction to Classes (OOP) | `python examples/18_classes_oop.py` | **Exercise 9** |
 | 19 | Bonus: Decorators | `python examples/19_bonus_decorators.py` | |
 | | Put it all together | | **Exercise 10: mini project** |
+| 20 | Variables and Memory | `python examples/20_variables_and_memory.py` | |
+| 21 | Data Persistence, File I/O, Serialization, JSON | `python examples/21_data_persistence.py` (run it twice) | **Exercise 11** |
 
 ---
 
@@ -104,6 +106,7 @@ Work down this table. Run the example, do its **Try it yourself** task, then do 
 | 8 | Functions | `exercises/ex08_lists_and_dictionaries.py` | Averages, filtering, word counts, top student |
 | 9 | Classes | `exercises/ex09_classes.py` | A `Rectangle` class and a `BankAccount` class |
 | 10 | Mini project | `exercises/ex10_mini_project_gradebook.py` | A gradebook that reads `students.csv` and writes a report |
+| 11 | Functions | `exercises/ex11_data_persistence.py` | Reading a first line, saving settings as JSON, pickle, a visit counter that survives between runs |
 
 ### Exercises 1 to 4: plain scripts
 
@@ -122,7 +125,7 @@ print(f"{celsius} C is {fahrenheit} F")
 
 The checker runs your script several times with **different starting values** (for example `celsius = 0` and `celsius = -40`), so your code must work for any value, not only the one in the file.
 
-### Exercises 5 to 10: functions and classes
+### Exercises 5 to 11: functions and classes
 
 1. Open the exercise file. Each function has a docstring that says exactly what it must do, with examples.
 2. Replace `raise NotImplementedError("Write your code here")` with your own code.

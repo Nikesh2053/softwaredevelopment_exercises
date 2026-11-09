@@ -9,11 +9,12 @@ Each check prints PASS, FAIL (with what was expected) or TODO (not started yet).
 
 Exercises 1 to 4 are plain scripts. check.py runs them several times, each time
 with different starting values, and reads the variables your code creates.
-Exercises 5 to 10 use functions. check.py imports them and calls each function.
+Exercises 5 to 11 use functions. check.py imports them and calls each function.
 """
 
 import ast
 import importlib.util
+import json
 import math
 import subprocess
 import sys
@@ -390,6 +391,63 @@ def checks_ex10(m: ModuleType) -> list[tuple[str, Callable]]:
     ]
 
 
+def checks_ex11(m: ModuleType) -> list[tuple[str, Callable]]:
+    """Checks for exercise 11, using a temporary folder."""
+    tmp = Path(tempfile.mkdtemp())
+
+    def first_line() -> tuple[bool, str]:
+        """The first line comes back without its newline."""
+        path = tmp / "names.txt"
+        path.write_text("Ada\nGrace\n", encoding="utf-8")
+        return equals("Ada", m.read_first_line, str(path))
+
+    def settings_round_trip() -> tuple[bool, str]:
+        """Settings saved as JSON load back the same."""
+        path = str(tmp / "settings.json")
+        settings = {"theme": "dark", "font_size": 14, "languages": ["Python", "SQL"]}
+        call(m.save_settings, path, settings)
+        return equals(settings, m.load_settings, path)
+
+    def settings_are_json() -> tuple[bool, str]:
+        """The settings file is real JSON text that anyone can read."""
+        path = tmp / "check.json"
+        call(m.save_settings, str(path), {"theme": "light"})
+        got = json.loads(path.read_text(encoding="utf-8"))
+        return got == {"theme": "light"}, f"expected the file to contain JSON for {{'theme': 'light'}}, got {got!r}"
+
+    def object_round_trip() -> tuple[bool, str]:
+        """A set and a tuple survive pickle unchanged."""
+        path = str(tmp / "data.pkl")
+        value = {"tags": {"a", "b"}, "point": (1, 2)}
+        call(m.save_object, path, value)
+        return equals(value, m.load_object, path)
+
+    def visits_count_up() -> tuple[bool, str]:
+        """Three visits give 1, 2 and 3."""
+        path = str(tmp / "visits.txt")
+        got = [call(m.record_visit, path) for _ in range(3)]
+        return got == [1, 2, 3], f"expected [1, 2, 3], got {got!r}"
+
+    def visits_survive() -> tuple[bool, str]:
+        """The count is stored in the file, not in a variable."""
+        path = tmp / "stored.txt"
+        call(m.record_visit, str(path))
+        call(m.record_visit, str(path))
+        got = path.read_text(encoding="utf-8").strip() if path.exists() else None
+        return got == "2", f"expected the file to contain '2', got {got!r}"
+
+    return [
+        ("read_first_line gives 'Ada' without the newline", first_line),
+        ("read_first_line on a missing file == ''", lambda: equals("", m.read_first_line, str(tmp / "missing.txt"))),
+        ("save_settings then load_settings gives the same dict", settings_round_trip),
+        ("save_settings writes real JSON", settings_are_json),
+        ("load_settings on a missing file == {}", lambda: equals({}, m.load_settings, str(tmp / "missing.json"))),
+        ("save_object then load_object keeps a set and a tuple", object_round_trip),
+        ("record_visit three times gives 1, 2, 3", visits_count_up),
+        ("record_visit keeps the count in the file", visits_survive),
+    ]
+
+
 SCRIPT_EXERCISES = {
     "ex01_variables_and_operations": checks_ex01,
     "ex02_conditionals": checks_ex02,
@@ -403,6 +461,7 @@ FUNCTION_EXERCISES = {
     "ex08_lists_and_dictionaries": checks_ex08,
     "ex09_classes": checks_ex09,
     "ex10_mini_project_gradebook": checks_ex10,
+    "ex11_data_persistence": checks_ex11,
 }
 CHECKS = {**SCRIPT_EXERCISES, **FUNCTION_EXERCISES}
 

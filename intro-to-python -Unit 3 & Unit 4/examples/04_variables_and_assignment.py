@@ -10,6 +10,7 @@ Run:
 Naming rules:
     - Start with a letter or underscore, then letters, digits or underscores.
     - No spaces and no reserved words (if, for, class ...).
+    - Names are case-sensitive: myVar and myvar are two different variables.
     - Use lower_case_with_underscores for variables (PEP 8 style).
     - Use UPPER_CASE for values that should not change (constants).
 
@@ -17,6 +18,7 @@ Try it yourself:
     1. Create variables for your name, age and course, then print a sentence using them.
     2. Swap the values of two variables in one line.
     3. Try naming a variable 2nd_place. What happens?
+    4. Add  print(Myvar)  at the end. Read the NameError: why does Python not find it?
 """
 
 print("--- 1. Creating variables (the slide's example) ---")
@@ -54,3 +56,9 @@ print(module_name, "has", total_students, "students in", full_groups, "groups of
 
 print("\n--- 6. f-strings put variables inside text ---")
 print(f"{name} is {age} and studies {course}.")
+
+print("\n--- 7. Names are case-sensitive ---")
+myVar = "upper V"
+myvar = "lower v"
+print("myVar =", myVar)
+print("myvar =", myvar)
