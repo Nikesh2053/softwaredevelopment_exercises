@@ -34,28 +34,76 @@ Task 5  Savings goal
 """
 
 print("--- Task 1: running total ---")
+
+
+
+
+
+print("--- Task 1: running total ---")
 n = 10
-total = None
+
+# Task 1: Running total
+total = 0
+for number in range(1, n + 1):
+    total += number
+
 print(f"1 + 2 + ... + {n} = {total}")
+
 
 print("\n--- Task 2: times table ---")
 table_number = 7
-table_lines = None
+
+# Task 2: Times table
+table_lines = []
+for number in range(1, 13):
+    table_lines.append(
+        f"{table_number} x {number} = {table_number * number}"
+    )
+
 print(table_lines)
+
 
 print("\n--- Task 3: vowel counter ---")
 text = "Software Development"
-vowel_count = None
+
+# Task 3: Vowel counter
+vowel_count = 0
+for character in text:
+    if character.lower() in "aeiou":
+        vowel_count += 1
+
 print(f"{text!r} has {vowel_count} vowels")
+
 
 print("\n--- Task 4: FizzBuzz ---")
 fizz_limit = 15
-fizzbuzz = None
+
+# Task 4: FizzBuzz
+fizzbuzz = []
+
+for number in range(1, fizz_limit + 1):
+    if number % 3 == 0 and number % 5 == 0:
+        fizzbuzz.append("FizzBuzz")
+    elif number % 3 == 0:
+        fizzbuzz.append("Fizz")
+    elif number % 5 == 0:
+        fizzbuzz.append("Buzz")
+    else:
+        fizzbuzz.append(str(number))
+
 print(fizzbuzz)
+
 
 print("\n--- Task 5: savings goal ---")
 balance = 1000
 rate = 0.05
 target = 1500
-years = None
+
+# Task 5: Savings goal
+years = 0
+
+while balance < target:
+    balance *= (1 + rate)
+    years += 1
+
 print(f"It takes {years} years to reach £{target}")
