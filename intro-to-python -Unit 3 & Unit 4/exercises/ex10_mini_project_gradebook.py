@@ -14,55 +14,107 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 
 def grade_band(score: int) -> str:
-    """Return "Distinction" (70+), "Merit" (60+), "Pass" (40+) or "Fail"."""
-    raise NotImplementedError("Write your code here")
+    """Return the grade band for a student's score."""
+
+    if score >= 70:
+        return "Distinction"
+    elif score >= 60:
+        return "Merit"
+    elif score >= 40:
+        return "Pass"
+    else:
+        return "Fail"
 
 
 def read_students(path: str) -> list[dict]:
-    """Read the CSV file and return a list of dictionaries.
+    """Read the CSV file and return a list of student dictionaries."""
 
-    Each dictionary has the keys name, course and score, with score as an int.
+    students = []
 
-    Example:
-        read_students("data/students.csv")[0] -> {"name": "Ada", "course": "Software Development", "score": 78}
-    """
-    raise NotImplementedError("Write your code here")
+    with open(path, "r", encoding="utf-8", newline="") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            student = {
+                "name": row["name"],
+                "course": row["course"],
+                "score": int(row["score"])
+            }
+
+            students.append(student)
+
+    return students
 
 
 def class_average(students: list[dict]) -> float:
-    """Return the average score of all students, rounded to 1 decimal place."""
-    raise NotImplementedError("Write your code here")
+    """Calculate the average score of all students."""
+
+    if not students:
+        return 0.0
+
+    total = sum(student["score"] for student in students)
+
+    return round(total / len(students), 1)
 
 
 def band_counts(students: list[dict]) -> dict[str, int]:
-    """Return how many students are in each grade band.
+    """Count students in each grade band."""
 
-    Only include bands that at least one student is in.
+    counts = {}
 
-    Example:
-        {"Distinction": 3, "Merit": 1, "Pass": 1, "Fail": 1}
-    """
-    raise NotImplementedError("Write your code here")
+    for student in students:
+        band = grade_band(student["score"])
+
+        if band in counts:
+            counts[band] += 1
+        else:
+            counts[band] = 1
+
+    return counts
 
 
 def write_report(students: list[dict], path: str) -> int:
-    """Write a CSV report with columns name, score, band, highest score first.
+    """Write a CSV report with highest score first."""
 
-    Return the number of students written.
-    """
-    raise NotImplementedError("Write your code here")
+    sorted_students = sorted(
+        students,
+        key=lambda student: student["score"],
+        reverse=True
+    )
+
+    with open(path, "w", encoding="utf-8", newline="") as file:
+        fieldnames = ["name", "score", "band"]
+
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for student in sorted_students:
+            writer.writerow({
+                "name": student["name"],
+                "score": student["score"],
+                "band": grade_band(student["score"])
+            })
+
+    return len(sorted_students)
 
 
 def main() -> None:
     """Run the gradebook on data/students.csv and print a summary."""
+
     students = read_students(str(DATA_DIR / "students.csv"))
+
     print(f"Students     : {len(students)}")
     print(f"Class average: {class_average(students)}")
+
     for band, count in band_counts(students).items():
         print(f"  {band:<12} {count}")
+
     output = DATA_DIR / "output" / "report.csv"
     output.parent.mkdir(parents=True, exist_ok=True)
+
     written = write_report(students, str(output))
+
     print(f"Report with {written} students written to {output}")
 
 
